@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RN Wireframe v3</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f5f5f5;color:#111;}
+
+/* ── NAV ONLY ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:300;}
+.logo-wf{display:flex;align-items:center;gap:10px;color:#111;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.logo-box{width:24px;height:24px;border:1.5px solid #bbb;display:flex;align-items:center;justify-content:center;}
+.logo-inner{width:8px;height:8px;background:#111;}
+.nav-items{display:flex;gap:4px;position:relative;}
+.nav-btn{padding:5px 14px;height:28px;border:1px solid #ddd;display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:1px;color:#999;text-transform:uppercase;cursor:pointer;background:#fff;}
+.nav-btn:hover{border-color:#aaa;color:#333;}
+.nav-btn.active-page{border-color:#999;color:#333;background:#f5f5f5;}
+
+/* Industries dropdown */
+.ind-dropdown{display:none;position:absolute;top:100%;left:0;margin-top:2px;background:#fff;border:1px solid #ddd;min-width:180px;z-index:400;}
+.ind-dropdown.open{display:block;}
+.ind-dd-item{padding:9px 14px;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:#999;border-bottom:1px solid #f0f0f0;}
+.ind-dd-item:last-child{border-bottom:none;}
+.ind-dd-item:hover{color:#333;background:#fafafa;}
+.ind-dd-item.disabled{opacity:.35;cursor:not-allowed;}
+.cs-badge{font-size:7px;letter-spacing:1px;border:1px solid #e0e0e0;padding:2px 5px;color:#bbb;}
+
+/* ── PAGES ── */
+.page{display:none;}.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{background:#fff;padding:64px 32px 48px;border-bottom:1px solid #ddd;}
+.eyebrow{font-size:9px;letter-spacing:3px;color:#bbb;text-transform:uppercase;margin-bottom:20px;}
+
+/* ── BUTTONS ── */
+.btn-f{height:36px;background:#111;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 18px;}
+.btn-f span{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+.btn-o{height:36px;border:1px solid #bbb;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 18px;background:#fff;}
+.btn-o span{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#888;}
+.ctas{display:flex;gap:10px;}
+
+/* ── SECTIONS ── */
+.section{padding:48px 32px;border-bottom:1px solid #ddd;background:#fff;}
+.section.alt{background:#fafafa;}
+.sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:16px;}
+
+/* ── SKELETON LINES ── */
+.sk{background:#e8e8e8;border-radius:1px;}
+.sk-h{height:14px;}.sk-sm{height:10px;}.sk-lg{height:20px;}
+.w100{width:100%}.w90{width:90%}.w80{width:80%}.w70{width:70%}.w60{width:60%}.w50{width:50%}.w40{width:40%}
+
+/* ── GREY BOXES ── */
+.box{background:#e8e8e8;border:1px solid #ddd;}
+.img-box{background:#ebebeb;border:1px solid #ddd;position:relative;overflow:hidden;}
+.img-box::after{content:'[ image ]';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:2px;color:#bbb;text-transform:uppercase;}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1px solid #ddd;padding:18px;display:flex;flex-direction:column;gap:10px;}
+.card.alt{background:#fafafa;}
+
+/* ── TICKER (static) ── */
+.ticker{background:#f7f7f7;padding:10px 32px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;display:flex;gap:32px;overflow:hidden;}
+.ticker span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#ccc;white-space:nowrap;}
+
+/* ── LOGO GRID ── */
+.logo-grid{display:flex;flex-wrap:wrap;border:1px solid #ddd;}
+.logo-cell{flex:1 1 14%;padding:20px;border-right:1px solid #ddd;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:center;}
+.logo-ph{height:16px;background:#ddd;border-radius:1px;}
+
+/* ── CASE TABS ── */
+.tab-row{display:flex;border-bottom:1px solid #ddd;}
+.tab{padding:8px 18px;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;color:#bbb;}
+.tab.on{color:#333;border-bottom-color:#111;}
+
+/* ── FOOTER ── */
+footer{background:#fafafa;padding:36px 32px 20px;border-top:1px solid #ddd;}
+
+/* ── COMPLIANCE BADGES ── */
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.badge-item{height:32px;padding:0 14px;border:1px solid #ddd;display:flex;align-items:center;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;background:#fff;}
+</style>
+</head>
+<body>
+
+<!-- SINGLE NAV -->
+<nav>
+  <div class="logo-wf" onclick="show('main')">
+    <div class="logo-box"><div class="logo-inner"></div></div>
+    Radical Numerics
+  </div>
+  <div class="nav-items">
+    <div class="nav-btn" id="nb-about" onclick="show('about')">About Us</div>
+    <div class="nav-btn" id="nb-ind" onclick="toggleDd(event)">
+      Industries ▾
+      <div class="ind-dropdown" id="ind-dd">
+        <div class="ind-dd-item" onclick="goToBio(event)">Biosecurity</div>
+        <div class="ind-dd-item disabled">Synbio <span class="cs-badge">Soon</span></div>
+        <div class="ind-dd-item disabled">Pharma <span class="cs-badge">Soon</span></div>
+      </div>
+    </div>
+    <div class="nav-btn" id="nb-blog" onclick="show('blog')">Blog</div>
+    <div class="nav-btn" id="nb-join">Join Us</div>
+  </div>
+</nav>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="page active" id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">Hero — Main Page</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+      <div class="sk sk-h w100" style="height:64px;"></div>
+      <div class="sk sk-h w80" style="height:64px;"></div>
+      <div class="sk sk-h w60" style="height:64px;"></div>
+    </div>
+    <div class="ctas">
+      <div class="btn-f" onclick="show('blog')"><span>Learn More →</span></div>
+      <div class="btn-o" onclick="show('blog')"><span>Blog</span></div>
+    </div>
+  </div>
+
+  <!-- MANIFESTO LINK -->
+  <div style="background:#fff;border-bottom:1px solid #ddd;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="show('about')">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:9px;letter-spacing:2px;color:#ccc;">02</span>
+      <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;">Manifesto</span>
+    </div>
+    <span style="font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;">Read more →</span>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <span>Scientific World Models</span><span>·</span>
+    <span>Frontier Architecture</span><span>·</span>
+    <span>Generative Genomics</span><span>·</span>
+    <span>Biosecurity</span><span>·</span>
+    <span>Scientific World Models</span><span>·</span>
+    <span>Frontier Architecture</span><span>·</span>
+    <span>Generative Genomics</span>
+  </div>
+
+  <!-- FEATURED MODEL -->
+  <div style="display:flex;border-bottom:1px solid #ddd;height:460px;">
+    <div style="flex:3;border-right:1px solid #ddd;position:relative;">
+      <div class="img-box" style="height:100%;width:100%;border:none;"></div>
+      <div style="position:absolute;bottom:24px;left:24px;display:flex;flex-direction:column;gap:10px;z-index:2;">
+        <div class="eyebrow" style="margin-bottom:0;">Featured</div>
+        <div style="height:28px;width:180px;background:#e8e8e8;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;letter-spacing:1px;color:#999;text-transform:uppercase;">XX Model | Release</span></div>
+        <div class="sk sk-sm w60" style="margin-top:4px;"></div>
+        <div class="ctas" style="margin-top:4px;">
+          <div class="btn-f"><span>Learn More →</span></div>
+          <div class="btn-o" onclick="show('blog')"><span>Blog</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1.2;display:flex;flex-direction:column;overflow-y:auto;background:#fff;">
+      <div class="eyebrow" style="padding:12px 14px 8px;margin-bottom:0;">Features</div>
+      <div style="border-bottom:1px solid #eee;padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+        <div class="img-box" style="height:60px;"></div>
+        <div class="sk sk-sm w80"></div>
+        <div class="sk sk-sm w60"></div>
+      </div>
+      <div style="border-bottom:1px solid #eee;padding:12px 14px;display:flex;flex-direction:column;gap:7px;background:#fafafa;">
+        <div class="img-box" style="height:60px;"></div>
+        <div class="sk sk-sm w80"></div>
+        <div class="sk sk-sm w60"></div>
+      </div>
+      <div style="border-bottom:1px solid #eee;padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+        <div class="img-box" style="height:60px;"></div>
+        <div class="sk sk-sm w80"></div>
+        <div class="sk sk-sm w60"></div>
+      </div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;gap:7px;background:#fafafa;">
+        <div class="img-box" style="height:60px;"></div>
+        <div class="sk sk-sm w80"></div>
+        <div class="sk sk-sm w60"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LATEST RELEASES -->
+  <div class="section alt">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div class="sec-label" style="margin-bottom:0;">Latest Releases</div>
+      <div class="btn-o" style="height:28px;" onclick="show('blog')"><span style="font-size:8px;">View All →</span></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div class="card" style="flex:1 1 220px;min-height:300px;justify-content:space-between;">
+        <div><div class="img-box" style="height:110px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 8px;">NVFP4 Pretraining: Systems Optimizations</div><div class="sk sk-sm w100" style="margin-bottom:5px;"></div><div class="sk sk-sm w60"></div></div>
+        <div style="border-top:1px solid #eee;padding-top:10px;margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Date</span><span style="font-size:8px;color:#bbb;">Jan 12, 2026</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Category</span><span style="font-size:8px;color:#bbb;">Research</span></div>
+          <div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Post →</span></div>
+        </div>
+      </div>
+      <div class="card" style="flex:1 1 220px;min-height:300px;justify-content:space-between;">
+        <div><div class="img-box" style="height:110px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 8px;">Phalanx: Hardware-Aligned Sliding-Window Recurrences</div><div class="sk sk-sm w100" style="margin-bottom:5px;"></div><div class="sk sk-sm w60"></div></div>
+        <div style="border-top:1px solid #eee;padding-top:10px;margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Date</span><span style="font-size:8px;color:#bbb;">Oct 14, 2025</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Category</span><span style="font-size:8px;color:#bbb;">Research</span></div>
+          <div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Post →</span></div>
+        </div>
+      </div>
+      <div class="card" style="flex:1 1 220px;min-height:300px;justify-content:space-between;">
+        <div><div class="img-box" style="height:110px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 8px;">RND1: Simple, Scalable AR-to-Diffusion Conversion</div><div class="sk sk-sm w100" style="margin-bottom:5px;"></div><div class="sk sk-sm w60"></div></div>
+        <div style="border-top:1px solid #eee;padding-top:10px;margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Date</span><span style="font-size:8px;color:#bbb;">Oct 9, 2025</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Category</span><span style="font-size:8px;color:#bbb;">Research</span></div>
+          <div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Post →</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDUSTRIES -->
+  <div class="section">
+    <div class="sec-label">Industries</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="flex:1 1 200px;cursor:pointer;" onclick="goToBio()">
+        <div class="img-box" style="height:200px;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;"><span style="font-size:14px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.4;">Biosecurity</span></div>
+        </div>
+        <div style="padding:10px 0;display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w60"></div><div class="sk sk-sm w40"></div></div>
+      </div>
+      <div style="flex:1 1 200px;opacity:.35;cursor:not-allowed;">
+        <div class="img-box" style="height:200px;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:2;"><span style="font-size:14px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.4;">Synbio</span><span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;border:1px solid #ddd;padding:3px 10px;background:#fff;">Coming Soon</span></div>
+        </div>
+        <div style="padding:10px 0;display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w60"></div><div class="sk sk-sm w40"></div></div>
+      </div>
+      <div style="flex:1 1 200px;opacity:.35;cursor:not-allowed;">
+        <div class="img-box" style="height:200px;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:2;"><span style="font-size:14px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.4;">Pharma</span><span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;border:1px solid #ddd;padding:3px 10px;background:#fff;">Coming Soon</span></div>
+        </div>
+        <div style="padding:10px 0;display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w60"></div><div class="sk sk-sm w40"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUSTED BY -->
+  <div class="section alt">
+    <div class="sec-label">Trusted By</div>
+    <div class="logo-grid">
+      <div class="logo-cell"><div class="logo-ph" style="width:70px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:60px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:75px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:55px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:68px;"></div></div>
+      <div class="logo-cell" style="border-right:none;"><div class="logo-ph" style="width:65px;"></div></div>
+    </div>
+  </div>
+
+  <!-- CTA CONTACT -->
+  <div class="section" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding-top:72px;padding-bottom:72px;">
+    <div class="eyebrow" style="margin-bottom:0;">Get in touch</div>
+    <div style="width:100%;max-width:560px;display:flex;flex-direction:column;gap:10px;align-items:center;">
+      <div class="box" style="height:44px;width:90%;"></div>
+      <div class="box" style="height:44px;width:70%;"></div>
+    </div>
+    <div class="ctas">
+      <div class="btn-f"><span>Contact Us →</span></div>
+      <div class="btn-o" onclick="show('about')"><span>Join Us</span></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="display:flex;flex-wrap:wrap;gap:0;padding-bottom:32px;border-bottom:1px solid #ddd;margin-bottom:20px;">
+      <div style="flex:2 1 160px;padding-right:32px;display:flex;flex-direction:column;gap:12px;">
+        <div class="logo-wf" onclick="show('main')"><div class="logo-box"><div class="logo-inner"></div></div>Radical Numerics</div>
+        <div style="display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div>
+        <div style="display:flex;gap:7px;"><div class="box" style="width:24px;height:24px;"></div><div class="box" style="width:24px;height:24px;"></div><div class="box" style="width:24px;height:24px;"></div></div>
+      </div>
+      <div style="flex:1 1 100px;padding:0 16px;display:flex;flex-direction:column;gap:9px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Company</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w60"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1 1 100px;padding:0 16px;display:flex;flex-direction:column;gap:9px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Research</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div>
+      <div style="flex:1 1 100px;padding:0 16px;display:flex;flex-direction:column;gap:9px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Industries</div><div class="sk sk-sm w60"></div><div class="sk sk-sm w50"></div><div class="sk sk-sm w70"></div></div>
+      <div style="flex:1 1 100px;padding:0 16px;display:flex;flex-direction:column;gap:9px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Legal</div><div class="sk sk-sm w60"></div><div class="sk sk-sm w70"></div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;"><div class="sk sk-sm w30"></div><div style="display:flex;gap:14px;"><div class="sk sk-sm" style="width:55px;"></div><div class="sk sk-sm" style="width:55px;"></div></div></div>
+  </footer>
+</div>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<div class="page" id="about">
+  <div class="hero" style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;">
+    <div style="flex:1 1 380px;">
+      <div class="eyebrow">Mission Statement</div>
+      <div style="font-size:15px;font-weight:700;color:#444;line-height:1.5;margin-bottom:18px;max-width:580px;">"Biology holds the answers to humanity's greatest challenges. We're building the AI to unlock them."</div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:500px;margin-bottom:24px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w90"></div></div>
+      <div class="ctas">
+        <div class="btn-f" onclick="show('blog')"><span>Our Research →</span></div>
+        <div class="btn-o"><span>Join Us</span></div>
+      </div>
+    </div>
+    <div class="img-box" style="flex:1 1 240px;height:260px;"></div>
+  </div>
+
+  <!-- WHY WE EXIST -->
+  <div class="section alt">
+    <div class="sec-label">02 — Why We Exist</div>
+    <div style="display:flex;gap:36px;flex-wrap:wrap;">
+      <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:12px;">
+        <div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w90"></div><div class="sk sk-sm w70"></div>
+        <div style="height:1px;background:#e0e0e0;margin:4px 0;"></div>
+        <div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w90"></div>
+        <div style="height:1px;background:#e0e0e0;margin:4px 0;"></div>
+        <div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div>
+        <div style="margin-top:6px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#bbb;">— Michael Poli, Stefano Massaroli, Eric Nguyen & Armin W. Thomas</div>
+      </div>
+      <div style="flex:0 0 220px;padding-left:20px;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Key Facts</div>
+        <div><div class="box" style="height:24px;width:56px;margin-bottom:6px;"></div><div class="sk sk-sm w80"></div></div>
+        <div><div class="box" style="height:24px;width:56px;margin-bottom:6px;"></div><div class="sk sk-sm w80"></div></div>
+        <div><div class="box" style="height:24px;width:56px;margin-bottom:6px;"></div><div class="sk sk-sm w80"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section alt">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:10px;">
+      <div>
+        <div class="sec-label" style="margin-bottom:8px;">04 — Team</div>
+        <div style="display:flex;gap:6px;">
+          <div style="padding:4px 12px;border:1px solid #aaa;font-size:9px;letter-spacing:1px;color:#555;text-transform:uppercase;cursor:pointer;background:#fff;">Core Team</div>
+          <div style="padding:4px 12px;border:1px solid #ddd;font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;cursor:pointer;">Advisory Board</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="flex:1 1 150px;background:#fff;border:1px solid #ddd;">
+        <div class="img-box" style="height:150px;border:none;border-bottom:1px solid #ddd;"></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:7px;"><div class="sk sk-h w70"></div><div class="sk sk-sm w50"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div style="display:flex;gap:5px;margin-top:4px;"><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">PhD</span><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">Stanford</span></div></div>
+      </div>
+      <div style="flex:1 1 150px;background:#fff;border:1px solid #ddd;">
+        <div class="img-box" style="height:150px;border:none;border-bottom:1px solid #ddd;"></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:7px;"><div class="sk sk-h w70"></div><div class="sk sk-sm w50"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div style="display:flex;gap:5px;margin-top:4px;"><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">PhD</span><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">MIT</span></div></div>
+      </div>
+      <div style="flex:1 1 150px;background:#fff;border:1px solid #ddd;">
+        <div class="img-box" style="height:150px;border:none;border-bottom:1px solid #ddd;"></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:7px;"><div class="sk sk-h w70"></div><div class="sk sk-sm w50"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div style="display:flex;gap:5px;margin-top:4px;"><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">PhD</span><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">Caltech</span></div></div>
+      </div>
+      <div style="flex:1 1 150px;background:#fff;border:1px solid #ddd;">
+        <div class="img-box" style="height:150px;border:none;border-bottom:1px solid #ddd;"></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:7px;"><div class="sk sk-h w70"></div><div class="sk sk-sm w50"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div style="display:flex;gap:5px;margin-top:4px;"><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">PhD</span><span style="font-size:8px;border:1px solid #ddd;padding:2px 7px;color:#bbb;">Harvard</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVESTORS -->
+  <div class="section">
+    <div class="sec-label">05 — Investors & Backers</div>
+    <div class="logo-grid">
+      <div class="logo-cell"><div class="logo-ph" style="width:65px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:70px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:58px;"></div></div>
+      <div class="logo-cell"><div class="logo-ph" style="width:72px;"></div></div>
+      <div class="logo-cell" style="border-right:none;"><div class="logo-ph" style="width:64px;"></div></div>
+    </div>
+  </div>
+
+  <!-- SCIENCE & RESEARCH -->
+  <div class="section alt">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div class="sec-label" style="margin-bottom:0;">07 — Science & Research</div>
+      <div class="btn-o" style="height:28px;" onclick="show('blog')"><span style="font-size:8px;">View All Papers →</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div class="card" style="flex:1 1 200px;min-height:240px;justify-content:space-between;"><div><div class="img-box" style="height:90px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 6px;">NVFP4 Pretraining: Systems Optimizations</div></div><div style="border-top:1px solid #eee;padding-top:10px;"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;">Date</span><span style="font-size:8px;color:#bbb;">Jan 12, 2026</span></div><div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Paper →</span></div></div></div>
+      <div class="card" style="flex:1 1 200px;min-height:240px;justify-content:space-between;"><div><div class="img-box" style="height:90px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 6px;">Phalanx: Hardware-Aligned Sliding-Window Recurrences</div></div><div style="border-top:1px solid #eee;padding-top:10px;"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;">Date</span><span style="font-size:8px;color:#bbb;">Oct 14, 2025</span></div><div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Paper →</span></div></div></div>
+      <div class="card" style="flex:1 1 200px;min-height:240px;justify-content:space-between;"><div><div class="img-box" style="height:90px;"></div><div style="font-size:12px;font-weight:700;color:#333;line-height:1.4;margin:10px 0 6px;">RND1: Simple, Scalable AR-to-Diffusion Conversion</div></div><div style="border-top:1px solid #eee;padding-top:10px;"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:8px;color:#ccc;text-transform:uppercase;">Date</span><span style="font-size:8px;color:#bbb;">Oct 9, 2025</span></div><div class="btn-o" style="width:100%;justify-content:center;" onclick="show('blog')"><span>Read Paper →</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- RESPONSIBLE AI -->
+  <div class="section">
+    <div class="sec-label">08 — Responsible AI</div>
+    <div style="display:flex;border:1px solid #ddd;flex-wrap:wrap;">
+      <div style="flex:1;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1;padding:20px;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div></div>
+    </div>
+    <div style="margin-top:14px;"><div class="btn-o" style="width:200px;"><span>Read Full Policy →</span></div></div>
+  </div>
+
+  <!-- CAREERS -->
+  <div class="section alt" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding-top:64px;padding-bottom:64px;">
+    <div class="eyebrow" style="margin-bottom:0;">Careers</div>
+    <div class="box" style="height:40px;width:70%;max-width:520px;"></div>
+    <div class="box" style="height:40px;width:50%;max-width:380px;"></div>
+    <div style="display:flex;flex-direction:column;gap:6px;max-width:380px;width:100%;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w70" style="margin:0 auto;"></div></div>
+    <div class="btn-f" style="margin-top:6px;"><span>See Open Roles →</span></div>
+  </div>
+
+  <!-- CONTACT & PRESS -->
+  <div class="section">
+    <div class="sec-label">10 — Contact & Press</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;">
+      <div class="card" style="flex:1 1 200px;">
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;">Press & Media</div>
+        <div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div>
+        <div style="height:1px;background:#eee;margin:4px 0;"></div>
+        <div class="sk sk-sm w70"></div><div class="sk sk-sm w50"></div>
+        <div class="btn-o" style="margin-top:6px;"><span>Download Press Kit →</span></div>
+      </div>
+      <div class="card" style="flex:2 1 280px;">
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;">Contact Form</div>
+        <div style="display:flex;gap:8px;"><div class="box" style="flex:1;height:34px;"></div><div class="box" style="flex:1;height:34px;"></div></div>
+        <div class="box" style="height:34px;"></div>
+        <div class="box" style="height:72px;"></div>
+        <div class="btn-f" style="width:110px;"><span>Send →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="display:flex;flex-wrap:wrap;gap:0;padding-bottom:28px;border-bottom:1px solid #ddd;margin-bottom:18px;">
+      <div style="flex:2 1 160px;padding-right:28px;display:flex;flex-direction:column;gap:10px;"><div class="logo-wf" onclick="show('main')"><div class="logo-box"><div class="logo-inner"></div></div>Radical Numerics</div><div style="display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div><div style="display:flex;gap:6px;"><div class="box" style="width:22px;height:22px;"></div><div class="box" style="width:22px;height:22px;"></div></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Company</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w60"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Research</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Legal</div><div class="sk sk-sm w60"></div><div class="sk sk-sm w70"></div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;"><div class="sk sk-sm w30"></div><div style="display:flex;gap:12px;"><div class="sk sk-sm" style="width:50px;"></div><div class="sk sk-sm" style="width:50px;"></div></div></div>
+  </footer>
+</div>
+
+<!-- ═══════════ INDUSTRIES ═══════════ -->
+<div class="page" id="industries">
+
+  <!-- LANDING -->
+  <div id="ind-landing">
+    <div class="hero" style="padding-bottom:36px;">
+      <div class="eyebrow">Industries</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:0;"><div class="sk sk-h w70" style="height:52px;"></div><div class="sk sk-h w50" style="height:52px;"></div></div>
+    </div>
+    <div style="display:flex;border-top:1px solid #ddd;">
+      <div style="flex:1;border-right:1px solid #ddd;cursor:pointer;" onclick="showBio()">
+        <div class="img-box" style="height:280px;border:none;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;"><span style="font-size:16px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.35;">Biosecurity</span></div>
+        </div>
+        <div style="padding:20px;border-top:1px solid #ddd;"><div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div><div class="btn-o" style="width:120px;"><span style="font-size:8px;">Explore →</span></div></div>
+      </div>
+      <div style="flex:1;border-right:1px solid #ddd;opacity:.35;cursor:not-allowed;">
+        <div class="img-box" style="height:280px;border:none;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:2;"><span style="font-size:16px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.35;">Synbio</span><span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;border:1px solid #ddd;padding:3px 10px;background:#fff;">Coming Soon</span></div>
+        </div>
+        <div style="padding:20px;border-top:1px solid #ddd;"><div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div><div style="height:32px;width:120px;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Coming Soon</span></div></div>
+      </div>
+      <div style="flex:1;opacity:.35;cursor:not-allowed;">
+        <div class="img-box" style="height:280px;border:none;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:2;"><span style="font-size:16px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#333;opacity:.35;">Pharma</span><span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#aaa;border:1px solid #ddd;padding:3px 10px;background:#fff;">Coming Soon</span></div>
+        </div>
+        <div style="padding:20px;border-top:1px solid #ddd;"><div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div><div style="height:32px;width:120px;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Coming Soon</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIOSECURITY SUB-LANDING -->
+  <div id="bio-landing" style="display:none;">
+    <!-- BREADCRUMB -->
+    <div style="padding:10px 32px;background:#fafafa;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:8px;">
+      <span onclick="show('main')" style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#aaa;cursor:pointer;">Home</span>
+      <span style="font-size:9px;color:#ccc;">›</span>
+      <span onclick="showIndLanding()" style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#aaa;cursor:pointer;">Industries</span>
+      <span style="font-size:9px;color:#ccc;">›</span>
+      <span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#555;">Biosecurity</span>
+    </div>
+
+    <div class="hero" style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="flex:1 1 380px;">
+        <div class="eyebrow">Biosecurity</div>
+        <div style="font-size:15px;font-weight:700;color:#555;line-height:1.45;margin-bottom:14px;max-width:560px;">"Analyze biological threats before they escalate"</div>
+        <div style="display:flex;flex-direction:column;gap:7px;max-width:480px;margin-bottom:20px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;padding:8px 14px;border:1px solid #ddd;width:fit-content;background:#fff;"><div style="width:6px;height:6px;background:#6aaa6a;border-radius:50%;"></div><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#7aaa7a;">Used by [X] national biosecurity agencies</span></div>
+        <div class="ctas">
+          <div class="btn-f"><span>Use the API →</span></div>
+          <div class="btn-o"><span>Contact Us</span></div>
+        </div>
+      </div>
+      <div class="img-box" style="flex:1 1 240px;height:240px;"></div>
+    </div>
+
+    <!-- HOW BioAI HELPS -->
+    <div class="section alt">
+      <div class="sec-label">How BioAI Helps Biosecurity</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="card" style="flex:1 1 180px;border:1px solid #ccc;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-lg w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;margin-top:4px;cursor:pointer;">Learn more →</div></div>
+        <div class="card" style="flex:1 1 180px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-lg w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;margin-top:4px;cursor:pointer;">Learn more →</div></div>
+        <div class="card" style="flex:1 1 180px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-lg w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;margin-top:4px;cursor:pointer;">Learn more →</div></div>
+        <div class="card" style="flex:1 1 180px;"><div class="box" style="width:24px;height:24px;"></div><div class="sk sk-lg w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;margin-top:4px;cursor:pointer;">Learn more →</div></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT DEMO -->
+    <div class="section">
+      <div class="sec-label">Product Demo</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+        <div class="img-box" style="flex:1 1 300px;height:260px;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
+            <div style="width:50px;height:50px;border:1px solid #ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;"><div style="width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid #bbb;margin-left:3px;"></div></div>
+          </div>
+        </div>
+        <div style="flex:1 1 200px;display:flex;flex-direction:column;gap:12px;justify-content:center;">
+          <div class="eyebrow" style="margin-bottom:0;">Walkthrough</div>
+          <div class="sk sk-lg w90"></div>
+          <div style="display:flex;flex-direction:column;gap:7px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+            <div style="display:flex;align-items:center;gap:9px;"><div style="width:18px;height:18px;border:1px solid #ddd;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;">1</div><div class="sk sk-sm w80"></div></div>
+            <div style="display:flex;align-items:center;gap:9px;"><div style="width:18px;height:18px;border:1px solid #ddd;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;">2</div><div class="sk sk-sm w70"></div></div>
+            <div style="display:flex;align-items:center;gap:9px;"><div style="width:18px;height:18px;border:1px solid #ddd;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;">3</div><div class="sk sk-sm w80"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRUST & COMPLIANCE -->
+    <div class="section alt">
+      <div class="sec-label">Trust & Compliance</div>
+      <div style="display:flex;border:1px solid #ddd;flex-wrap:wrap;">
+        <div style="flex:1 1 160px;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:28px;height:28px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+        <div style="flex:1 1 160px;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:28px;height:28px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+        <div style="flex:1 1 160px;padding:20px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:28px;height:28px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+        <div style="flex:1 1 160px;padding:20px;display:flex;flex-direction:column;gap:9px;"><div class="box" style="width:28px;height:28px;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+      </div>
+      <div class="badge-row">
+        <div class="badge-item"><div style="width:7px;height:7px;background:#ddd;margin-right:7px;"></div>HIPAA</div>
+        <div class="badge-item"><div style="width:7px;height:7px;background:#ddd;margin-right:7px;"></div>FedRAMP</div>
+        <div class="badge-item"><div style="width:7px;height:7px;background:#ddd;margin-right:7px;"></div>ISO 27001</div>
+        <div class="badge-item"><div style="width:7px;height:7px;background:#ddd;margin-right:7px;"></div>Air-Gap / On-Premise</div>
+      </div>
+    </div>
+
+    <!-- CASE STUDIES -->
+    <div class="section">
+      <div class="sec-label">Case Studies</div>
+      <div class="tab-row" id="case-tabs">
+        <div class="tab on" onclick="setTab(0)">Agency Alpha</div>
+        <div class="tab" onclick="setTab(1)">Biosafe Corp</div>
+        <div class="tab" onclick="setTab(2)">NatSec Institute</div>
+      </div>
+      <div id="case-panel-0" style="display:flex;gap:20px;padding:24px 0;flex-wrap:wrap;">
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Problem</div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Solution</div><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w70"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;border-color:#aaccaa;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#6aaa6a;">Result</div><div class="box" style="height:28px;width:72px;background:#ddeedd;border-color:#cce0cc;"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+      </div>
+      <div id="case-panel-1" style="display:none;gap:20px;padding:24px 0;flex-wrap:wrap;">
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Problem</div><div class="sk sk-sm w80"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w60"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Solution</div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;border-color:#aaccaa;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#6aaa6a;">Result</div><div class="box" style="height:28px;width:72px;background:#ddeedd;border-color:#cce0cc;"></div><div class="sk sk-sm w90"></div><div class="sk sk-sm w60"></div></div>
+      </div>
+      <div id="case-panel-2" style="display:none;gap:20px;padding:24px 0;flex-wrap:wrap;">
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Problem</div><div class="sk sk-sm w100"></div><div class="sk sk-sm w60"></div><div class="sk sk-sm w80"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;">Solution</div><div class="sk sk-sm w80"></div><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div>
+        <div class="card alt" style="flex:1 1 180px;gap:10px;border-color:#aaccaa;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#6aaa6a;">Result</div><div class="box" style="height:28px;width:72px;background:#ddeedd;border-color:#cce0cc;"></div><div class="sk sk-sm w70"></div><div class="sk sk-sm w90"></div></div>
+      </div>
+    </div>
+
+    <!-- ECOSYSTEM -->
+    <div class="section alt">
+      <div class="sec-label">Ecosystem & Integrations</div>
+      <div class="logo-grid">
+        <div class="logo-cell"><div class="logo-ph" style="width:60px;"></div></div>
+        <div class="logo-cell"><div class="logo-ph" style="width:68px;"></div></div>
+        <div class="logo-cell"><div class="logo-ph" style="width:55px;"></div></div>
+        <div class="logo-cell"><div class="logo-ph" style="width:70px;"></div></div>
+        <div class="logo-cell" style="border-right:none;"><div class="logo-ph" style="width:62px;"></div></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="section" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding-top:72px;padding-bottom:72px;">
+      <div class="eyebrow" style="margin-bottom:0;">Start Today</div>
+      <div style="width:100%;max-width:520px;display:flex;flex-direction:column;gap:10px;align-items:center;">
+        <div class="box" style="height:44px;width:85%;"></div>
+        <div class="box" style="height:44px;width:65%;"></div>
+      </div>
+      <div class="ctas">
+        <div class="btn-f"><span>Use the API →</span></div>
+        <div class="btn-o"><span>Contact Us</span></div>
+      </div>
+    </div>
+
+    <footer>
+      <div style="display:flex;flex-wrap:wrap;gap:0;padding-bottom:28px;border-bottom:1px solid #ddd;margin-bottom:18px;">
+        <div style="flex:2 1 160px;padding-right:28px;display:flex;flex-direction:column;gap:10px;"><div class="logo-wf" onclick="show('main')"><div class="logo-box"><div class="logo-inner"></div></div>Radical Numerics</div><div style="display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div></div>
+        <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Company</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w60"></div></div>
+        <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Research</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div></div>
+        <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Legal</div><div class="sk sk-sm w60"></div><div class="sk sk-sm w70"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;"><div class="sk sk-sm w30"></div><div style="display:flex;gap:12px;"><div class="sk sk-sm" style="width:50px;"></div><div class="sk sk-sm" style="width:50px;"></div></div></div>
+    </footer>
+  </div>
+</div>
+
+<!-- ═══════════ BLOG ═══════════ -->
+<div class="page" id="blog">
+  <div class="hero" style="padding-bottom:36px;">
+    <div class="eyebrow">Blog</div>
+    <div style="font-size:13px;color:#999;line-height:1.6;margin-bottom:24px;max-width:500px;">Our progress on the science of scaling, architecture and systems for scientific world models</div>
+    <div style="display:flex;gap:0;">
+      <div style="padding:6px 18px;border:1px solid #aaa;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#444;cursor:pointer;background:#eee;">All</div>
+      <div style="padding:6px 18px;border:1px solid #ddd;border-left:none;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#bbb;cursor:pointer;">Research</div>
+      <div style="padding:6px 18px;border:1px solid #ddd;border-left:none;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#bbb;cursor:pointer;">Talks</div>
+    </div>
+  </div>
+
+  <!-- FEATURED POST -->
+  <div style="display:flex;height:380px;border-bottom:1px solid #ddd;">
+    <div class="img-box" style="flex:1.4;border:none;border-right:1px solid #ddd;border-radius:0;"></div>
+    <div style="flex:1;padding:36px;display:flex;flex-direction:column;justify-content:space-between;background:#fafafa;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:14px;">Research · Jan 12, 2026</div>
+        <div style="font-size:16px;font-weight:700;color:#222;line-height:1.45;margin-bottom:14px;">NVFP4 Pretraining: Systems Optimizations</div>
+        <div style="display:flex;flex-direction:column;gap:7px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w80"></div><div class="sk sk-sm w90"></div><div class="sk sk-sm w60"></div></div>
+      </div>
+      <div>
+        <div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#bbb;margin-bottom:10px;">Jerome Ku & others at Radical Numerics</div>
+        <div class="btn-f"><span>Continue Reading →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST LIST -->
+  <div>
+    <div style="display:flex;border-bottom:1px solid #ddd;cursor:pointer;">
+      <div class="img-box" style="width:200px;height:140px;flex-shrink:0;border:none;border-right:1px solid #ddd;border-radius:0;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div><div class="eyebrow" style="margin-bottom:8px;">Research · Jan 12, 2026</div><div style="font-size:13px;font-weight:700;color:#333;line-height:1.4;margin-bottom:8px;">NVFP4 Pretraining: From Theory to Implementation</div><div style="display:flex;flex-direction:column;gap:5px;max-width:480px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Jerome Ku, Michael Poli & others</div><div style="font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;">Continue Reading →</div></div>
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid #ddd;cursor:pointer;background:#fafafa;">
+      <div class="img-box" style="width:200px;height:140px;flex-shrink:0;border:none;border-right:1px solid #ddd;border-radius:0;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div><div class="eyebrow" style="margin-bottom:8px;">Research · Oct 14, 2025</div><div style="font-size:13px;font-weight:700;color:#333;line-height:1.4;margin-bottom:8px;">Phalanx: Hardware-Aligned Sliding-Window Recurrences</div><div style="display:flex;flex-direction:column;gap:5px;max-width:480px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Garyk Brixi, Stefano Massaroli & others</div><div style="font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;">Continue Reading →</div></div>
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid #ddd;cursor:pointer;">
+      <div class="img-box" style="width:200px;height:140px;flex-shrink:0;border:none;border-right:1px solid #ddd;border-radius:0;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div><div class="eyebrow" style="margin-bottom:8px;">Research · Oct 9, 2025</div><div style="font-size:13px;font-weight:700;color:#333;line-height:1.4;margin-bottom:8px;">RND1: Simple, Scalable AR-to-Diffusion Conversion</div><div style="display:flex;flex-direction:column;gap:5px;max-width:480px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Keshigeyan Chandrasegaran, Armin W. Thomas</div><div style="font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;">Continue Reading →</div></div>
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid #ddd;cursor:pointer;background:#fafafa;">
+      <div class="img-box" style="width:200px;height:140px;flex-shrink:0;border:none;border-right:1px solid #ddd;border-radius:0;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div><div class="eyebrow" style="margin-bottom:8px;">Talks · Sep 12, 2025</div><div style="font-size:13px;font-weight:700;color:#333;line-height:1.4;margin-bottom:8px;">How AI Could Generate New Life Forms</div><div style="display:flex;flex-direction:column;gap:5px;max-width:480px;"><div class="sk sk-sm w100"></div><div class="sk sk-sm w70"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;">Eric Nguyen</div><div style="font-size:9px;letter-spacing:1px;color:#bbb;text-transform:uppercase;">Continue Reading →</div></div>
+      </div>
+    </div>
+    <div style="padding:28px;display:flex;justify-content:center;border-bottom:1px solid #ddd;">
+      <div class="btn-o" style="width:140px;"><span>Load More</span></div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="section alt" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding-top:60px;padding-bottom:60px;">
+    <div class="eyebrow" style="margin-bottom:0;">Stay Updated</div>
+    <div class="box" style="height:40px;width:55%;max-width:440px;"></div>
+    <div style="display:flex;gap:0;max-width:320px;width:100%;"><div class="box" style="flex:1;height:36px;"></div><div class="btn-f" style="width:90px;"><span>Subscribe</span></div></div>
+  </div>
+
+  <footer>
+    <div style="display:flex;flex-wrap:wrap;gap:0;padding-bottom:28px;border-bottom:1px solid #ddd;margin-bottom:18px;">
+      <div style="flex:2 1 160px;padding-right:28px;display:flex;flex-direction:column;gap:10px;"><div class="logo-wf" onclick="show('main')"><div class="logo-box"><div class="logo-inner"></div></div>Radical Numerics</div><div style="display:flex;flex-direction:column;gap:6px;"><div class="sk sk-sm w80"></div><div class="sk sk-sm w60"></div></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Company</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w60"></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Research</div><div class="sk sk-sm w70"></div><div class="sk sk-sm w80"></div></div>
+      <div style="flex:1 1 100px;padding:0 14px;display:flex;flex-direction:column;gap:8px;"><div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:2px;">Legal</div><div class="sk sk-sm w60"></div><div class="sk sk-sm w70"></div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;"><div class="sk sk-sm w30"></div><div style="display:flex;gap:12px;"><div class="sk sk-sm" style="width:50px;"></div><div class="sk sk-sm" style="width:50px;"></div></div></div>
+  </footer>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active-page'));
+  const map={main:'',about:'nb-about',industries:'nb-ind',blog:'nb-blog'};
+  if(map[id])document.getElementById(map[id]).classList.add('active-page');
+  closeDD();
+  if(id!=='industries')showIndLanding();
+  window.scrollTo(0,0);
+}
+function toggleDd(e){e.stopPropagation();document.getElementById('ind-dd').classList.toggle('open');}
+function closeDD(){document.getElementById('ind-dd').classList.remove('open');}
+function goToBio(e){if(e)e.stopPropagation();show('industries');showBio();}
+function showBio(){document.getElementById('ind-landing').style.display='none';document.getElementById('bio-landing').style.display='block';}
+function showIndLanding(){const il=document.getElementById('ind-landing');const bl=document.getElementById('bio-landing');if(il)il.style.display='block';if(bl)bl.style.display='none';}
+function setTab(n){
+  [0,1,2].forEach(i=>{
+    const p=document.getElementById('case-panel-'+i);
+    const tabs=document.querySelectorAll('.tab');
+    if(p)p.style.display=i===n?'flex':'none';
+    if(tabs[i]){tabs[i].classList.toggle('on',i===n);}
+  });
+}
+document.addEventListener('click',closeDD);
+</script>
+</body>
+</html>
